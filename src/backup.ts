@@ -7,9 +7,9 @@ import { env } from "./env";
 const uploadToS3 = async ({ name, path }: { name: string; path: string }) => {
   console.log("Uploading backup to S3...");
 
-  const bucket = env.AWS_BUCKET;
+  const bucket = env.AWS_S3_BUCKET;
 
-  const clientOptions: S3ClientConfig = { region: env.AWS_REGION };
+  const clientOptions: S3ClientConfig = { region: env.AWS_S3_REGION };
 
   const client = new S3Client(clientOptions);
 
@@ -29,7 +29,7 @@ const dumpToFile = async (path: string) => {
 
   await new Promise((resolve, reject) => {
     exec(
-      `pg_dump ${env.DATABASE_URL} -F t | gzip > ${path}`,
+      `pg_dump ${env.BACKUP_DATABASE_URL} -F t | gzip > ${path}`,
       (error, stdout, stderr) => {
         if (error) {
           reject({ error: JSON.stringify(error), stderr });
